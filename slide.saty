@@ -1,0 +1,526 @@
+@require: option
+@require: class-slydifi/theme/akasaka
+@require: figbox/figbox
+
+let ex-big-textbox ?:size-opt it =
+  let size = Option.from 48pt size-opt in
+    FigBox.textbox?:(set-font-size size) it
+
+let big-textbox ?:size-opt it =
+  let size = Option.from 32pt size-opt in
+    FigBox.textbox?:(set-font-size size) it
+
+let mid-textbox ?:size-opt it =
+  let size = Option.from 24pt size-opt in
+    FigBox.textbox?:(set-font-size size) it
+
+open FigBox
+in
+
+document '<
+  +set-config(|
+    SlydifiThemeAkasaka.default-config with
+    color-emph = Color.black;
+  |);
+
+  +make-title(|
+    title = {
+      |WebAssembly を理解する
+      |〜VM の作成を通して〜
+      |};
+    author = {|nsfisis (いまむら)|};
+    date = {|PHPerKaigi 2024|};
+  |);
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  +frame{自己紹介}<
+    +fig-center(vconcat [
+      gap 75pt;
+      hconcat [
+        big-textbox{nsfisis (いまむら)};
+        gap 20pt;
+        include-image 50pt `assets/me.jpeg`;
+      ];
+      gap 20pt;
+      big-textbox{\@ デジタルサーカス株式会社};
+      gap 60pt;
+      big-textbox?:(24pt){今年のコードゴルフ企画のシステム開発・運用};
+    ]);
+  >
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  +section{|WebAssemblyの概要|}<
+
+  +frame{WebAssemblyとは}<
+    +fig-center(vconcat [
+      gap 75pt;
+      big-textbox{WebAssembly (Wasm)};
+      gap 20pt;
+      mid-textbox{ブラウザなどで実行できる};
+      gap 10pt;
+      mid-textbox{ポータブルな仮想命令セット};
+    ]);
+  >
+
+  +frame{WebAssemblyの特徴}<
+    +fig-center(vconcat [
+      gap 60pt;
+      ex-big-textbox{ポータブル};
+      gap 20pt;
+      ex-big-textbox{速い};
+      gap 20pt;
+      ex-big-textbox{安全};
+    ]);
+  >
+
+  +frame{WebAssemblyの出自}<
+    +fig-center(vconcat [
+      gap 75pt;
+      mid-textbox{元々のモチベーション: ブラウザ上での高速な処理};
+      gap 20pt;
+      mid-textbox{動的な JavaScript だと限界がある};
+      gap 30pt;
+      mid-textbox{間にいくつかの技術が生まれたり消えたりし、};
+      gap 10pt;
+      mid-textbox{最終的に WebAssembly が策定された};
+    ]);
+  >
+
+  +frame{Emscripten}<
+    +fig-center(vconcat [
+      gap 60pt;
+      big-textbox{Emscripten};
+      gap 40pt;
+      mid-textbox{C/C++ のソースコードを Wasm に変換};
+      gap 20pt;
+      mid-textbox{C/C++ で書かれた膨大な資産を};
+      gap 10pt;
+      mid-textbox{ブラウザの上で動かせる};
+    ]);
+  >
+
+  +frame{Wasmの活用例}<
+    +fig-center(vconcat [
+      gap 50pt;
+      mid-textbox{PHPの処理系はCで書かれている};
+      gap 40pt;
+      mid-textbox{Emscripten を使って Wasm に変換できる};
+      gap 40pt;
+      mid-textbox{Wasm に変換するとブラウザ上で動かせる};
+      gap 40pt;
+      mid-textbox{例: PHP Playground、コードゴルフ企画};
+    ]);
+  >
+
+  +frame{WebAssemblyの特徴}<
+    +fig-center(vconcat [
+      gap 50pt;
+      big-textbox{ポータブル};
+      gap 20pt;
+      big-textbox{速い};
+      gap 20pt;
+      big-textbox{安全};
+      gap 40pt;
+      mid-textbox{これらの特徴はどのように実現されているのか};
+      gap 20pt;
+      mid-textbox{処理系を自作して理解しよう};
+    ]);
+  >
+
+  >
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  +section{|作成したものの紹介|}<
+
+  +frame{完成したもの}<
+    +fig-center(vconcat [
+      gap 30pt;
+      include-image 700pt `assets/screenshot.jpeg`;
+    ]);
+  >
+
+  +frame{完成したもの}<
+    +fig-center(vconcat [
+      gap 40pt;
+      mid-textbox{今回作った Wasm 処理系};
+      gap 30pt;
+      mid-textbox{の上に、Wasmに変換されたPHP処理系};
+      gap 30pt;
+      mid-textbox{の上に、\code(`echo "Hello, World!\n";`);};
+    ]);
+  >
+
+  +frame{完成したもの}<
+    +fig-center(vconcat [
+      gap 40pt;
+      mid-textbox{普通のPHP処理系};
+      gap 30pt;
+      mid-textbox{の上に、今回作った Wasm 処理系};
+      gap 30pt;
+      mid-textbox{の上に、Wasmに変換されたPHP処理系};
+      gap 30pt;
+      mid-textbox{の上に、\code(`echo "Hello, World!\n";`);};
+    ]);
+  >
+
+  +frame{完成したもの}<
+    +fig-center(vconcat [
+      gap 40pt;
+      mid-textbox{普通のPHP処理系};
+      gap 30pt;
+      mid-textbox{の上に、今回作った Wasm 処理系};
+      gap 30pt;
+      mid-textbox{の上に、Wasmに変換されたPHP処理系};
+      gap 30pt;
+      mid-textbox{の上に、\code(`echo "Hello, World!\n";`);};
+      gap 50pt;
+      mid-textbox{多段になりすぎて実行に30秒かかる};
+    ]);
+  >
+
+  >
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  +section{|Wasmの処理系を作る|}<
+
+  +frame{仕様書}<
+    +fig-center(vconcat [
+      gap 40pt;
+      big-textbox{成長途中の規格};
+      gap 20pt;
+      big-textbox{バージョンがいろいろある};
+      gap 50pt;
+      mid-textbox{バージョン1};
+      gap 20pt;
+      mid-textbox{バージョン2};
+      gap 20pt;
+      mid-textbox{WasmGC};
+    ]);
+  >
+
+  +frame{仕様書の構成}<
+    +fig-center(vconcat [
+      gap 60pt;
+      big-textbox{Structure};
+      gap 20pt;
+      big-textbox{Validation};
+      gap 20pt;
+      big-textbox{Execution};
+      gap 20pt;
+      big-textbox{Binary Format};
+      gap 20pt;
+      big-textbox{Text Format};
+    ]);
+  >
+
+  +frame{Binary Format と Text Format}<
+    +fig-center(vconcat [
+      gap 40pt;
+      mid-textbox{バイナリ形式のプログラム表現と、};
+      gap 20pt;
+      mid-textbox{テキスト形式のプログラム表現の2種類がある};
+      gap 40pt;
+      mid-textbox{同じ意味のプログラムを別々の書き方で表せる};
+      gap 20pt;
+      mid-textbox{両形式は、相互に変換可能};
+      gap 40pt;
+      mid-textbox{どちらか一方だけ実装してやればよい};
+    ]);
+  >
+
+  +frame{どの順に読むべきか？}<
+    +fig-center(vconcat [
+      gap 60pt;
+      big-textbox{Structure};
+      gap 20pt;
+      big-textbox{Validation};
+      gap 20pt;
+      big-textbox{Execution};
+      gap 20pt;
+      big-textbox{Binary Format};
+      gap 20pt;
+      big-textbox{Text Format};
+    ]);
+  >
+
+  +frame{どの順に読むべきか？}<
+    +fig-center(vconcat [
+      gap 60pt;
+      big-textbox{Structure (1)};
+      gap 20pt;
+      big-textbox{Validation (4)};
+      gap 20pt;
+      big-textbox{Execution (3)};
+      gap 20pt;
+      big-textbox{Binary Format (2)};
+      gap 20pt;
+      big-textbox{Text Format (2)};
+    ]);
+  >
+
+  +frame{Structure}<
+    +fig-center(vconcat [
+      gap 75pt;
+      mid-textbox{Wasmのプログラムを表すデータ構造を定義};
+      gap 20pt;
+      mid-textbox{命令セットの定義、各種プリミティブ型の定義など};
+      gap 40pt;
+      mid-textbox{これを読みながら、データ型を定義していく};
+    ]);
+  >
+
+  +frame{Binary Format / Text Format}<
+    +fig-center(vconcat [
+      gap 75pt;
+      mid-textbox{Wasmのプログラムがどのような};
+      gap 10pt;
+      mid-textbox{バイナリ/ソースコードで表されるかを定義};
+      gap 20pt;
+      mid-textbox{Structure で定義されたデータ構造へと変換していく};
+      gap 50pt;
+      mid-textbox{Binary Format のほうが楽そう？};
+    ]);
+  >
+
+  +frame{Execution}<
+    +fig-center(vconcat [
+      gap 75pt;
+      mid-textbox{Wasmをどう実行するか (VM本体)};
+      gap 40pt;
+      mid-textbox{仕様書を忠実に翻訳するだけでは実装できない};
+      gap 20pt;
+      mid-textbox{Structured Control Flow/Label周りが厄介};
+    ]);
+  >
+
+  +frame{Structured Control Flow の扱い}<
+    +fig-center(vconcat [
+      gap 70pt;
+      mid-textbox{仕様書の記述をそのまま実装するのは困難};
+      gap 50pt;
+      mid-textbox{(A) block/loop/ifを直列に展開};
+      gap 20pt;
+      mid-textbox{(B) 今回の方法};
+    ]);
+  >
+
+  +frame{Structured Control Flow の扱い: br 命令}<
+    +fig-center(vconcat [
+      gap 50pt;
+      big-textbox{br命令};
+      gap 40pt;
+      mid-textbox{block 命令中では break相当};
+      gap 20pt;
+      mid-textbox{loop 命令中では continue相当};
+      gap 40pt;
+      mid-textbox{continuationの話は無視していい};
+    ]);
+  >
+
+  +frame{Structured Control Flow の扱い: br 命令}<
+    +fig-center(vconcat [
+      gap 50pt;
+      big-textbox{br命令};
+      gap 40pt;
+      mid-textbox{仕様書にあるbr命令の処理の内容は};
+      gap 20pt;
+      mid-textbox{br命令を実行する箇所ではなく};
+      gap 20pt;
+      mid-textbox{呼び出し元となるblockとloopに書く};
+    ]);
+  >
+
+  +frame{Validation}<
+    +fig-center(vconcat [
+      gap 50pt;
+      mid-textbox{Wasm のプログラムが正しいかどうか};
+      gap 10pt;
+      mid-textbox{実行前に検証する};
+      gap 20pt;
+      mid-textbox{Wasm の安全性を担保している処理の一つ};
+    ]);
+  >
+
+  +frame{Validation}<
+    +fig-center(vconcat [
+      gap 50pt;
+      mid-textbox{Wasm のプログラムが正しいかどうか};
+      gap 10pt;
+      mid-textbox{実行前に検証する};
+      gap 20pt;
+      mid-textbox{Wasm の安全性を担保している処理の一つ};
+      gap 40pt;
+      mid-textbox{やらなくていい};
+      gap 20pt;
+      mid-textbox{世にある Wasm のプログラムは};
+      gap 10pt;
+      mid-textbox{Validation が通るものばかり};
+    ]);
+  >
+
+  +frame{外界とのやりとり}<
+    +fig-center(vconcat [
+      gap 50pt;
+      mid-textbox{Wasm自体の仕様には};
+      gap 10pt;
+      mid-textbox{外の世界とやりとりする手段がない};
+      gap 20pt;
+      mid-textbox{例: 入出力、ファイル操作、ネットワークアクセス等};
+      gap 20pt;
+      mid-textbox{必要に応じて明示的にインポートする};
+      gap 40pt;
+      mid-textbox{これによって安全性が高まっている}
+    ]);
+  >
+
+  +frame{まとめ}<
+    +fig-center(vconcat [
+      gap 50pt;
+      big-textbox{1. データ構造を定義};
+      gap 20pt;
+      big-textbox{2. Binary format のデコーダを実装};
+      gap 20pt;
+      big-textbox{3. VMを実装};
+      gap 20pt;
+      big-textbox{4. 外界とのインターフェースを実装};
+      gap 20pt;
+      big-textbox{5. 頑張る};
+    ]);
+  >
+
+  >
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  +section{|注目が集まるわけ|}<
+
+  +frame{WebAssemblyの特徴}<
+    +fig-center(vconcat [
+      gap 60pt;
+      ex-big-textbox{ポータブル};
+      gap 20pt;
+      ex-big-textbox{速い};
+      gap 20pt;
+      ex-big-textbox{安全};
+    ]);
+  >
+
+  +frame{WebAssemblyの特徴: ポータブル}<
+    +fig-center(vconcat [
+      gap 60pt;
+      mid-textbox{Wasm自体の仕様には};
+      gap 10pt;
+      mid-textbox{外の世界とやりとりする手段がない};
+      gap 20pt;
+      mid-textbox{特定の環境に依存しない};
+      gap 20pt;
+      mid-textbox{環境依存の処理はWasmの外でおこなう};
+    ]);
+  >
+
+  +frame{WebAssemblyの特徴: ポータブル}<
+    +fig-center(vconcat [
+      gap 75pt;
+      mid-textbox{Webに依存しない};
+      gap 20pt;
+      mid-textbox{JavaScriptやDOM等の技術から独立している};
+      gap 50pt;
+      mid-textbox{ブラウザの外でも動く};
+    ]);
+  >
+
+  +frame{WebAssemblyの特徴: 速い}<
+    +fig-center(vconcat [
+      gap 75pt;
+      mid-textbox{バイナリ形式: パースが速い};
+      gap 30pt;
+      mid-textbox{十分に低レベルな命令セット};
+    ]);
+  >
+
+  +frame{WebAssemblyの特徴: 安全}<
+    +fig-center(vconcat [
+      gap 75pt;
+      mid-textbox{検証しやすい (validation)};
+      gap 20pt;
+      mid-textbox{外界とのやりとりが明示的};
+      gap 20pt;
+      mid-textbox{サンドボックス化が容易};
+    ]);
+  >
+
+  +frame{活用事例}<
+    +fig-center(vconcat [
+      gap 60pt;
+      mid-textbox{ブラウザ上での高速な処理};
+      gap 20pt;
+      mid-textbox{C/C++のソフトウェアをブラウザへ移植};
+      gap 20pt;
+      mid-textbox{ソフトウェアのプラグイン};
+      gap 20pt;
+      mid-textbox{コンテナ};
+    ]);
+  >
+
+  +frame{活用事例}<
+    +fig-center(vconcat [
+      gap 60pt;
+      mid-textbox{ブラウザ上での高速な処理};
+      gap 20pt;
+      mid-textbox{C/C++のソフトウェアをブラウザへ移植};
+      gap 20pt;
+      mid-textbox{ソフトウェアのプラグイン};
+      gap 20pt;
+      mid-textbox{コンテナ};
+      gap 40pt;
+      big-textbox{Web以外の領域でも注目されている};
+    ]);
+  >
+
+  >
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  +section{|言語処理系を作る|}<
+
+  +frame{なぜ作るのか？}<
+    +fig-center(vconcat [
+      gap 50pt;
+      big-textbox{車輪の再発明};
+      gap 40pt;
+      big-textbox{世に優れたWasmの処理系はごまんとある};
+    ]);
+  >
+
+  +frame{なぜ作るのか？}<
+    +fig-center(vconcat [
+      gap 75pt;
+      ex-big-textbox{なぜ？};
+    ]);
+  >
+
+  +frame{なぜ作るのか？}<
+    +fig-center(vconcat [
+      gap 75pt;
+      ex-big-textbox{なぜ？};
+      gap 60pt;
+      ex-big-textbox{楽しい};
+    ]);
+  >
+
+  +frame{言語処理系の面白さ}<
+    +fig-center(vconcat [
+      gap 80pt;
+      mid-textbox{あるとき突然すべてが上手く動くようになる};
+      gap 40pt;
+      mid-textbox{自分の理解を遥かに超えたものがなぜか動く};
+    ]);
+  >
+
+  >
+
+>
