@@ -452,21 +452,8 @@ document '<
       mid-textbox{ソフトウェアのプラグイン};
       gap 20pt;
       mid-textbox{コンテナ};
-    ]);
-  >
-
-  +frame{活用事例}<
-    +fig-center(vconcat [
-      gap 60pt;
-      mid-textbox{ブラウザ上での高速な処理};
       gap 20pt;
-      mid-textbox{C/C++のソフトウェアをブラウザへ移植};
-      gap 20pt;
-      mid-textbox{ソフトウェアのプラグイン};
-      gap 20pt;
-      mid-textbox{コンテナ};
-      gap 40pt;
-      big-textbox{Web以外の領域でも注目されている};
+      mid-textbox{エッジコンピューティング};
     ]);
   >
 
