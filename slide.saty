@@ -64,17 +64,6 @@ document '<
     ]);
   >
 
-  +frame{WebAssemblyの特徴}<
-    +fig-center(vconcat [
-      gap 60pt;
-      ex-big-textbox{ポータブル};
-      gap 20pt;
-      ex-big-textbox{速い};
-      gap 20pt;
-      ex-big-textbox{安全};
-    ]);
-  >
-
   +frame{WebAssemblyの出自}<
     +fig-center(vconcat [
       gap 75pt;
